@@ -28,6 +28,8 @@ class MiHebra extends Thread {
     }
 }
 
+
+
 class EjemploCuentaIncrementos {
 
     public static void main(String args[]) {

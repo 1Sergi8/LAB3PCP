@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class EjemploMuestraPrimosEnVector {
 
@@ -109,6 +110,29 @@ public class EjemploMuestraPrimosEnVector {
         //
         // Implementacion paralela dinamica .
         //
+        System.out.println( "" );
+        System.out.println( "Implementacion paralela por dinamica." );
+        t1 = System.nanoTime();
+        // Gestion de hebras para la implementacion paralela por bloques
+
+
+        Thread[] vectorDin = new Thread[numHebras];
+        for (int i = 0; i < vectorDin.length; i++) {
+            vectorBlo[i] = new MiHebraPrimoDistDinamica(i, numHebras, vectorTrabajo);
+            vectorBlo[i].start();
+        }
+        for (int i = 0; i < vectorDin.length; i++) {
+            try {
+                vectorBlo[i].join();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        t2 = System.nanoTime();
+        tc = ( ( double ) ( t2 - t1 ) ) / 1.0e9;
+        double incrDin = ts / tc;
+        System.out.println( "Tiempo paralela por bloques (seg.):              " + tc );
+        System.out.println( "Incremento paralela por dinamica:                 " + incrDin);
 
     }
     static boolean esPrimo(long num) {
@@ -171,6 +195,30 @@ class MiHebraPrimoDistCiclica extends Thread {
         for (int i = miId; i < vector.length; i += numHebras) {
             if (EjemploMuestraPrimosEnVector.esPrimo(vector[i])) {
                 System.out.println("  Encontrado primo: " + vector[i]);
+            }
+        }
+    }
+}
+
+class MiHebraPrimoDistDinamica extends Thread {
+    int miId;
+    int numHebras;
+    long[] vector;
+    public static AtomicInteger indice = new AtomicInteger(0);
+
+
+    public MiHebraPrimoDistDinamica(int miId, int numHebras, long[] vector) {
+        this.miId = miId;
+        this.numHebras = numHebras;
+        this.vector = vector;
+    }
+
+
+    public void run() {
+        int indiceGlobal;
+        while ((indiceGlobal = indice.incrementAndGet()) < vector.length) {
+            if (EjemploMuestraPrimosEnVector.esPrimo(vector[indiceGlobal])) {
+                System.out.println("  Encontrado primo: " + vector[indiceGlobal]);
             }
         }
     }
