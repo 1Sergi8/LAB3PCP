@@ -59,7 +59,7 @@ public class EjemploMuestraPrimosEnVector {
 
         // Gestion de hebras para la implementacion paralela ciclica
 
-        Thread[] vectorCic = new Thread[numHebras];
+        MiHebraPrimoDistCiclica[] vectorCic = new MiHebraPrimoDistCiclica[numHebras];
         for (int i = 0; i < vectorCic.length; i++) {
             vectorCic[i] = new MiHebraPrimoDistCiclica(i, numHebras, vectorTrabajo);
             vectorCic[i].start();
@@ -88,7 +88,7 @@ public class EjemploMuestraPrimosEnVector {
         // Gestion de hebras para la implementacion paralela por bloques
 
 
-        Thread[] vectorBlo = new Thread[numHebras];
+        MiHebraPrimoDistBloques[] vectorBlo = new MiHebraPrimoDistBloques[numHebras];
         for (int i = 0; i < vectorBlo.length; i++) {
             vectorBlo[i] = new MiHebraPrimoDistBloques(i, numHebras, vectorTrabajo);
             vectorBlo[i].start();
@@ -116,14 +116,14 @@ public class EjemploMuestraPrimosEnVector {
         // Gestion de hebras para la implementacion paralela por bloques
 
 
-        Thread[] vectorDin = new Thread[numHebras];
+        MiHebraPrimoDistDinamica[] vectorDin = new MiHebraPrimoDistDinamica[numHebras];
         for (int i = 0; i < vectorDin.length; i++) {
-            vectorBlo[i] = new MiHebraPrimoDistDinamica(i, numHebras, vectorTrabajo);
-            vectorBlo[i].start();
+            vectorDin[i] = new MiHebraPrimoDistDinamica(i, numHebras, vectorTrabajo);
+            vectorDin[i].start();
         }
         for (int i = 0; i < vectorDin.length; i++) {
             try {
-                vectorBlo[i].join();
+                vectorDin[i].join();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -131,7 +131,7 @@ public class EjemploMuestraPrimosEnVector {
         t2 = System.nanoTime();
         tc = ( ( double ) ( t2 - t1 ) ) / 1.0e9;
         double incrDin = ts / tc;
-        System.out.println( "Tiempo paralela por bloques (seg.):              " + tc );
+        System.out.println( "Tiempo paralela por dinamica (seg.):              " + tc );
         System.out.println( "Incremento paralela por dinamica:                 " + incrDin);
 
     }
