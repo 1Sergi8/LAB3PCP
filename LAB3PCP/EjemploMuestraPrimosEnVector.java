@@ -48,7 +48,7 @@ public class EjemploMuestraPrimosEnVector {
         }
         t2 = System.nanoTime();
         ts = ((double) (t2 - t1)) / 1.0e9;
-        System.out.println("Tiempo s e c u e n c i a l ( seg . ) : " + ts);
+        System.out.println("Tiempo secuencial (seg.): " + ts);
         //
         // Implementacion paralela ciclica.
 
